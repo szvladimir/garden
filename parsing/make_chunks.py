@@ -1,13 +1,30 @@
+import os
 import sqlite3
+from pathlib import Path
 
-DB_PATH = "data/garden.db"
+DB_PATH = os.getenv("GARDEN_DB_PATH", "data/garden.db")
 MAX_CHARS = 2000
 
-def build_chunks():
-    conn = sqlite3.connect(DB_PATH)
+
+def build_chunks(db_path: str | Path | None = None):
+    db_path = Path(db_path or DB_PATH)
+    conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
 
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS message_chunks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            chat_name TEXT,
+            start_message_id INTEGER,
+            end_message_id INTEGER,
+            start_date TEXT,
+            end_date TEXT,
+            chunk_text TEXT
+        )
+        """
+    )
     cur.execute("DELETE FROM message_chunks")
 
     rows = cur.execute("""

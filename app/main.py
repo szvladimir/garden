@@ -4,6 +4,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, File, UploadFile
 
+from parsing.make_chunks import build_chunks
 from parsing.parser_json import parse_json_file
 
 app = FastAPI(title="Garden API")
@@ -33,6 +34,7 @@ async def upload_json(file: UploadFile = File(...)):
         buffer.write(await file.read())
 
     inserted = parse_json_file(destination, DB_PATH)
+    build_chunks(DB_PATH)
 
     return {
         "filename": file.filename,

@@ -39,5 +39,7 @@ def test_upload_json_file_is_saved(tmp_path):
 
     conn = sqlite3.connect(db_path)
     row = conn.execute("SELECT telegram_msg_id, text FROM messages LIMIT 1").fetchone()
+    chunk_row = conn.execute("SELECT chat_name, chunk_text FROM message_chunks LIMIT 1").fetchone()
     conn.close()
     assert row == (101, "First message")
+    assert chunk_row == ("garden", "[2026-01-01T00:00:00] Alice: First message")
