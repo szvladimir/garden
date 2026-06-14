@@ -9,7 +9,17 @@ DB_PATH = "data/garden.db"
 EMBED_MODEL = "text-embedding-3-small"
 CHAT_MODEL = "gpt-4.1-mini"
 
-client = OpenAI()
+from dotenv import load_dotenv
+import os
+from openai import OpenAI
+
+load_dotenv()
+
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY")
+)
+
+# client = OpenAI()
 STOP_WORDS = {"stop", "ok", "quit", "exit"}
 
 
