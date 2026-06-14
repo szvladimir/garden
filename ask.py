@@ -67,7 +67,7 @@ Question:
 
 
 def run_cli(input_func=input):
-    print('Задавайте вопросы по помашнему огороду. Наберите "exit" для выхода')
+    print('Задавайте вопросы по домашнему огороду. Наберите "exit" или "ok" для выхода')
 
     while True:
         question = input_func("Вопрос: ").strip()
