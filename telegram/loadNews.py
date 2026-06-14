@@ -1,4 +1,5 @@
-from telethon import TelegramClient, events
+from telethon.sync import TelegramClient
+from telethon import events
 import sqlite3
 import os
 from dotenv import load_dotenv
@@ -7,16 +8,12 @@ load_dotenv()
 
 api_id = int(os.getenv("TG_API_ID"))
 api_hash = os.getenv("TG_API_HASH")
-
-print(api_id)
-print(api_hash[:8] + "...")
-
-client = TelegramClient("telegram_session", api_id, api_hash)
-client.start(phone="+491792673516")
-
-print("Code requested")
+session_name = os.getenv("TG_SESSION_NAME", "telegram_session")
+phone = os.getenv("TG_PHONE")
 
 DB_PATH = "data/garden.db"
+
+client = TelegramClient(session_name, api_id, api_hash)
 
 def save_message(event):
     msg = event.message
@@ -44,5 +41,10 @@ async def handler(event):
     save_message(event)
     print("saved:", event.message.id, event.message.message)
 
-client.start()
+client.start(phone=phone)
+
+me = client.get_me()
+print("Connected as:", me.first_name, me.username)
+
+print("Listening for new messages...")
 client.run_until_disconnected()
